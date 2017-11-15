@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home Page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://assets.annotateit.org/annotator/v1.1.0/annotator-full.min.js"></script>
+
+    <title>Annotate</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">    <!--[if lte IE 8]>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    <link rel="stylesheet" href="/css/splash.css">
+	<link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.1.0/annotator.min.css">
 </head>
 
 <body>
@@ -9,4 +23,20 @@
 		{{.contents}}
 	</div>
 </body>
+<script type="text/javascript">
+	jQuery(function ($) {
+		var content = $('.article-body').annotator()
+		content.annotator('addPlugin', 'Store', {
+		  // The endpoint of the store on your server.
+		  prefix: '/store',
+
+		  // Attach the uri of the current page to all annotations to allow search.
+		  annotationData: {
+			'uri': 'http://this/document/only'
+		  },
+
+		});
+	});
+
+</script>
 </html>

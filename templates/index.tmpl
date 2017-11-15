@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://assets.annotateit.org/annotator/v1.1.0/annotator-full.min.js"></script>
 
     <title>Annotate</title>
 
@@ -13,6 +15,7 @@
 	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
     <!--<![endif]-->
     <link rel="stylesheet" href="/css/splash.css">
+	<link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.1.0/annotator.min.css">
 </head>
 <body>
   <div class="splash-container">
@@ -42,5 +45,9 @@
 			window.location.href = "page/?u=" + encoded;
 		}
 	}
+    
+	jQuery(function ($) {
+		$('#').annotator();
+	});
 </script>
 </html>
