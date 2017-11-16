@@ -74,9 +74,21 @@ func ReadAnnotate(c *gin.Context) {
 }
 
 func UpdateAnnotate(c *gin.Context) {
+	var annotate structs.Annotation
+	if c.ShouldBindJSON(&annotate) == nil {
+		annotate.Updated = time.Now()
+		saved, _ := json.Marshal(annotate)
+		fmt.Println("Inserting: " + string(saved[:]))
+		db.UpdateAnnotation(annotate)
+	}
 
+	c.Redirect(http.StatusSeeOther, AnnotationPrefix+"/"+annotate.ID)
 }
 
 func DeleteAnnotate(c *gin.Context) {
+	id := c.Param("id")
 
+	db.DeleteAnnotation(id)
+
+	c.Status(http.StatusNoContent)
 }

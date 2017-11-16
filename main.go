@@ -33,7 +33,7 @@ func main() {
 	storage.GET("/annotations", handlers.IndexAnnotate)
 	storage.POST("/annotations", handlers.CreateAnnotate)
 	storage.GET("/annotations/:id", handlers.ReadAnnotate)
-	storage.POST("/annotations/:id", handlers.UpdateAnnotate)
+	storage.PUT("/annotations/:id", handlers.UpdateAnnotate)
 	storage.DELETE("/annotations/:id", handlers.DeleteAnnotate)
 
 	router.Run("127.0.0.1:8080")
