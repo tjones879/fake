@@ -119,7 +119,6 @@ func SearchAnnotate(c *gin.Context) {
 		skip = 0
 	}
 
-	fmt.Println("SearchAnnotate:", uid, uri, lim)
 	a, num, err := db.GetAnnotationByURI(uid, uri, lim, skip)
 	if err != nil {
 		fmt.Println(err)
@@ -128,10 +127,5 @@ func SearchAnnotate(c *gin.Context) {
 		Total:   uint(num),
 		Results: a,
 	}
-	b, errr := json.Marshal(response)
-	if errr != nil {
-		fmt.Println(errr)
-	}
-	fmt.Println(string(b))
 	c.JSON(http.StatusOK, response)
 }
