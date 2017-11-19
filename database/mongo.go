@@ -39,6 +39,11 @@ func withCollection(collection string, s func(*mgo.Collection) error) error {
 	return s(c)
 }
 
+func usingCollection(collection string) *mgo.Collection {
+	session := getSession()
+	return session.DB(databaseName).C(collection)
+}
+
 /*
 func SearchPerson(q interface{}, skip, limit int) (searchResults []Person, searchErr string) {
 	searchErr = ""

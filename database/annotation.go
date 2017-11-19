@@ -58,13 +58,25 @@ func GetAnnotationByID(id string) (a structs.Annotation, err error) {
 }
 
 // GetAnnotationsByUser returns all annotations that a specific user has generated.
-func GetAnnotationsByUser(user structs.User) (a []structs.Annotation, err error) {
+func GetAnnotationsByUser(user string) (a []structs.Annotation, err error) {
 	query := func(c *mgo.Collection) error {
-		fn := c.Find(bson.M{"owner": user.ID}).All(&a)
+		fn := c.Find(bson.M{"owner": user}).All(&a)
 		return fn
 	}
 
 	err = withCollection(annotations, query)
+	return
+}
+
+// GetAnnotationByURI returns some annotations for the specified uri.
+func GetAnnotationByURI(uid, uri string, limit, skip int) (a []structs.Annotation, num int, err error) {
+	query := func(c *mgo.Collection) error {
+		fn := c.Find(bson.M{"uri": uri, "user": uid}).Skip(skip).Limit(limit).All(&a)
+		return fn
+	}
+
+	_ = withCollection(annotations, query)
+	num, err = usingCollection(annotations).Find(bson.M{"uri": uri, "user": uid}).Count()
 	return
 }
 

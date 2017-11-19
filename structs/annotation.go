@@ -5,15 +5,6 @@ import (
 	"time"
 )
 
-/*
-type User struct {
-	Name  string   `bson:"name" json:"name"`
-	Pages []string `bson:"pages" json:"pages"`
-	Email string   `bson:"email" json:"email"`
-	ID    string   `bson:"id" json:"sub"`
-}
-*/
-
 type (
 	// Metadata stores info about a RESTful API.
 	Metadata struct {
@@ -38,15 +29,16 @@ type (
 
 	// Annotation stores all information about a user's annotation.
 	Annotation struct {
-		ID            string    `bson:"id" json:"id"`
-		SchemaVersion string    `bson:"annotator_schema_version" json:"annotator_schema_version"`
-		Created       time.Time `bson:"created" json:"created"`
-		Updated       time.Time `bson:"updated" json:"updated"`
-		Text          string    `bson:"text" json:"text"`
-		Quote         string    `bson:"quote" json:"quote"`
-		URI           string    `bson:"uri" json:"uri"`
-		Owner         string    `bson:"user" json:"user"`
-		Consumer      string    `bson:"consumer" json:"consumer"`
+		ID            string            `bson:"id" json:"id"`
+		SchemaVersion string            `bson:"annotator_schema_version" json:"annotator_schema_version"`
+		Created       time.Time         `bson:"created" json:"created"`
+		Updated       time.Time         `bson:"updated" json:"updated"`
+		Text          string            `bson:"text" json:"text"`
+		Quote         string            `bson:"quote" json:"quote"`
+		URI           string            `bson:"uri" json:"uri"`
+		Owner         string            `bson:"user" json:"user"`
+		Consumer      string            `bson:"consumer" json:"consumer"`
+		Range         []AnnotationRange `bson:"ranges" json:"ranges"`
 	}
 
 	// AnnotationRange stores the relative location of an annotation
@@ -55,6 +47,12 @@ type (
 		End         string `bson:"end" json:"end"`
 		StartOffset uint   `bson:"startOffset" json:"startOffset"`
 		EndOffset   uint   `bson:"endOffset" json:"endOffset"`
+	}
+
+	// AnnotationSearch returns a number of annotations in db.
+	AnnotationSearch struct {
+		Total   uint         `json:"total"`
+		Results []Annotation `json:"rows"`
 	}
 )
 
