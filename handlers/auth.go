@@ -102,5 +102,5 @@ func AuthHandler(c *gin.Context) {
 		handleErr(c, err)
 	}
 
-	c.Status(http.StatusOK)
+	c.Redirect(http.StatusFound, "/")
 }
