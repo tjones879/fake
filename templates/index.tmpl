@@ -8,32 +8,47 @@
 
     <title>Annotate</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">    <!--[if lte IE 8]>
-	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
-	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    <!--<![endif]-->
+    <link rel="stylesheet" href="/css/skeleton.css">
     <link rel="stylesheet" href="/css/splash.css">
 	<link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.1.0/annotator.min.css">
 </head>
 <body>
-  <div class="splash-container">
-    <div class="splash">
-      <h1 class="splash-head">Annotate</h1>
-      <p class="splash-subhead">
-		Annotate all of your resources!
-      </p>
-      <div class="pure-form">
-        <fieldset>
-		  <input type="text" id="page_uri" name="url" placeholder="URL">
-		  <button type="submit" id="grab_page" class="pure-button pure-button-primary">Grab Page</button>
+  <div class="container">
+	<div class="row">
+		<div class="twelve columns">
+			<div class="splash">
+				<h1 class="splash-head u-full-width">Annotator</h1>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="twelve columns">
+			<div class="splash">
+				<p class="splash-subhead">Annotate all of your sources!</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<form>
+			<div class="twelve columns">
+				<input class="u-full-width" type="text" id="page_uri" name="url" placeholder="URL">
+			</div>
+		</form>
+	</div>
+	<div class="row">
+		<div class="one-third column">&nbsp;</div>
+		<div class="one-third column">
+			<input class="button-primary u-full-width" type="submit" id="grab_page" value="Grab Page">
+		</div>
+		<div class="one-third column">&nbsp;</div>
+	</div>
+  </div>
+  <footer>
+	  <div class="row">
 		  <a href="about">About</a>
 		  <a href="me">My Account</a>
-        </fieldset>
-      </div>
-    </div>
-  </div>
+	  </div>
+  </footer>
 </body>
 <script type="text/javascript">
 	document.getElementById("grab_page").onclick = function() {

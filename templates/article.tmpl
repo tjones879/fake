@@ -8,19 +8,18 @@
 
     <title>Annotate</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">    <!--[if lte IE 8]>
-	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
-	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    <!--<![endif]-->
-    <link rel="stylesheet" href="/css/splash.css">
+	<link rel="stylesheet" href="/css/skeleton.css">
 	<link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.1.0/annotator.min.css">
+    <link rel="stylesheet" href="/css/splash.css">
 </head>
 
 <body>
-	<div class='article-body'>
-		{{.contents}}
+	<div class="container">
+		<div class="row">
+			<div class="article-body">
+				{{.contents}}
+			</div>
+		</div>
 	</div>
 </body>
 <script type="text/javascript">
@@ -32,9 +31,14 @@
 
 		  // Attach the uri of the current page to all annotations to allow search.
 		  annotationData: {
-			'uri': 'http://this/document/only'
+			'uri': window.location.href
 		  },
 
+		  loadFromSearch: {
+			'limit': 0,
+			'all_fields': 1,
+			'uri': window.location.href
+		  },
 		});
 	});
 
