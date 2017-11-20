@@ -2,8 +2,10 @@ package handlers
 
 import (
 	_ "fmt"
+	"github.com/cespare/xxhash"
 	"github.com/gin-gonic/gin"
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/tjones879/fake/util"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -55,7 +57,12 @@ func scrapePage(url string) []byte {
 // PageHandler handles /page?u= requests.
 func PageHandler(c *gin.Context) {
 	page := c.DefaultQuery("u", "https://en.wikipedia.org/wiki/Dune_(novel)")
-	contents := template.HTML(scrapePage(page))
+	scraped := string(scrapePage(page))
+	contents := template.HTML(scraped)
+	fs := util.CreateStorage(xxhash.Sum64String(scraped), page, scraped)
+	fs.SaveFile()
+
+	log.Println("Hash:", xxhash.Sum64String(page))
 
 	c.HTML(200, "article.tmpl", gin.H{
 		"contents": contents,
