@@ -45,7 +45,8 @@ func LoginHandler(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("state", state)
 	session.Save()
-	c.Writer.Write([]byte("<html><title>Golang Google</title> <body> <a href='" + getLoginURL(state) + "'><button>Login with Google!</button> </a> </body></html>"))
+	//c.Writer.Write([]byte("<html><title>Golang Google</title> <body> <a href='" + getLoginURL(state) + "'><button>Login with Google!</button> </a> </body></html>"))
+	c.Redirect(http.StatusSeeOther, getLoginURL(state))
 }
 
 func handleErr(c *gin.Context, err error) {
