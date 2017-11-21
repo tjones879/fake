@@ -5,18 +5,23 @@ import (
 	"compress/gzip"
 	"fmt"
 	"github.com/cespare/xxhash"
+	"io"
+	"io/ioutil"
 	"net/url"
 	"os"
 	"strings"
+	"time"
 )
 
 var rootDir = "/home/jones/fake"
 
 // FileStorage TODO
 type FileStorage struct {
-	directory [5]string
-	name      string
-	contents  string
+	Hash      uint64    `bson:"hash"`
+	Directory string    `bson:"dir"`
+	Name      string    `bson:"name"`
+	Contents  string    `bson:"-"`
+	Date      time.Time `bson:"timestamp"`
 }
 
 func getFileHash(contents string) (hash uint64) {
@@ -26,9 +31,10 @@ func getFileHash(contents string) (hash uint64) {
 
 // CreateStorage TODO
 func CreateStorage(hash uint64, uri, contents string) (file FileStorage) {
-	file.directory = getPathByHash(hash)
-	file.name = getFileNameByURL(uri)
-	file.contents = contents
+	file.Hash = hash
+	file.Directory = getPathByHash(hash)
+	file.Name = getFileNameByURL(uri)
+	file.Contents = contents
 	return
 }
 
@@ -37,10 +43,11 @@ Take the hash of a file and get its correct file path.
 Pad the front of the hash with 0's and split into 5
 groups of 4 digits.
 */
-func getPathByHash(hash uint64) (filePath [5]string) {
+func getPathByHash(hash uint64) (path string) {
+	var filePath [5]string
 	j := 0
-	hashStr := fmt.Sprintf("%020d", hash)
 	res := ""
+	hashStr := fmt.Sprintf("%020d", hash)
 
 	for i, r := range hashStr {
 		res = res + string(r)
@@ -49,6 +56,11 @@ func getPathByHash(hash uint64) (filePath [5]string) {
 			res = ""
 			j++
 		}
+	}
+
+	path = rootDir
+	for _, s := range filePath {
+		path += "/" + s
 	}
 	return
 }
@@ -89,31 +101,53 @@ func compressFile(buf *bufio.Writer, contents string) {
 	return
 }
 
-func fileExists(f FileStorage) bool {
-	_, err := os.Stat(f.RealPath())
+/*
+Decompress file
+*/
+func decompressFile(buf io.Reader) string {
+	zr, err := gzip.NewReader(buf)
+	if err != nil {
+		fmt.Println("1)decompressFile:", err)
+	}
+	contents, err := ioutil.ReadAll(zr)
+	if err != nil {
+		fmt.Println("2)decompressFile:", err)
+	}
+	zr.Close()
+	return string(contents)
+}
+
+func (f FileStorage) fileExists() bool {
+	_, err := os.Stat(f.Directory + "/" + f.Name)
 	return !os.IsNotExist(err)
 }
 
-// RealPath TODO
-func (f FileStorage) RealPath() string {
-	path := rootDir
-	for _, s := range f.directory {
-		path += "/" + s
-	}
-	return path
-}
-
 // SaveFile TODO
-func (f FileStorage) SaveFile() {
-	if !fileExists(f) {
-		os.MkdirAll(f.RealPath(), 0777)
-		fd, err := os.OpenFile(f.RealPath()+"/"+f.name, os.O_CREATE|os.O_WRONLY, 0666)
+func (f *FileStorage) SaveFile() {
+	if !f.fileExists() {
+		os.MkdirAll(f.Directory, 0777)
+		fd, err := os.OpenFile(f.Directory+"/"+f.Name, os.O_CREATE|os.O_WRONLY, 0666)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("SaveFile:", err)
 		}
 		writer := bufio.NewWriter(fd)
-		compressFile(writer, f.contents)
+		compressFile(writer, f.Contents)
 		_ = writer.Flush()
 		fd.Close()
+	}
+}
+
+/*
+LoadFile will load and decompress a file by name and hash
+*/
+func (f *FileStorage) LoadFile() {
+	if f.fileExists() {
+		fd, err := os.OpenFile(f.Directory+"/"+f.Name, os.O_RDONLY, 0666)
+		if err != nil {
+			fmt.Println("LoadFile:", err)
+		}
+		f.Contents = decompressFile(fd)
+		fd.Close()
+		fmt.Println(f.Contents)
 	}
 }
