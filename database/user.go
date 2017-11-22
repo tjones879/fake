@@ -1,8 +1,10 @@
 package database
 
 import (
+	"fmt"
 	"github.com/tjones879/fake/structs"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func ensureUsersIndex(s *mgo.Session) error {
@@ -36,10 +38,34 @@ func InsertUser(q structs.User) (insertError error) {
 // GetUserByID returns a user with the given id.
 func GetUserByID(id string) (user structs.User, err error) {
 	query := func(c *mgo.Collection) error {
-		fn := c.FindId(id).One(&user)
+		fn := c.Find(bson.M{"id": id}).One(&user)
 		return fn
 	}
 
 	err = withCollection("users", query)
 	return
+}
+
+// GetUserPages TODO
+func GetUserPages(u structs.User) (files []structs.FileStorage) {
+	for _, p := range u.FileIDs {
+		f, err := GetFileByID(p)
+		fmt.Println("fileID", p)
+		if err != nil {
+			fmt.Println("GetUserPages:", err)
+		} else {
+			fmt.Println(f)
+			files = append(files, f)
+		}
+	}
+	return
+}
+
+// AddFileToUser TODO
+func AddFileToUser(uid string, f structs.FileStorage) error {
+	// pages
+	match := bson.M{"id": uid}
+	// TODO find a better way to select `files` field from doc
+	change := bson.M{"$push": bson.M{"files": f.UID}}
+	return usingCollection("users").Update(match, change)
 }

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	_ "fmt"
 	"github.com/cespare/xxhash"
 	"github.com/gin-gonic/gin"
 	"github.com/microcosm-cc/bluemonday"
@@ -62,13 +62,17 @@ func PageHandler(c *gin.Context) {
 	if !db.IsPageSaved(page) {
 		scraped = string(scrapePage(page))
 		file := util.CreateStorage(xxhash.Sum64String(scraped), page, scraped)
-		file.SaveFile()
+		util.SaveFile(&file)
 		db.SavePage(page, file)
+		db.SaveFile(file)
+		if uid := getUserID(c); uid != "" {
+			db.AddFileToUser(uid, file)
+		}
 	} else {
 		sp := db.GetSavedPage(page)
-		file := sp.Versions[0]
-		fmt.Println(file)
-		file.LoadFile()
+		uid := sp.Versions[0]
+		file, _ := db.GetFileByID(uid)
+		util.LoadFile(&file)
 		scraped = file.Contents
 	}
 	contents := template.HTML(scraped)

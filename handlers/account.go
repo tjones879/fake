@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	db "github.com/tjones879/fake/database"
+	"net/http"
 )
 
 // AccountHandler handles /me
@@ -12,8 +14,14 @@ func AccountHandler(c *gin.Context) {
 	id := session.Get("user-id")
 
 	if id == nil {
-		fmt.Println("Sorry, you must sign in.")
+		c.AbortWithStatus(http.StatusForbidden)
 	} else {
-		fmt.Println("user-id:", session.Get("user-id"))
+		// Get all pages annotated by the user
+		user, _ := db.GetUserByID(id.(string))
+		fmt.Println("Files", db.GetUserPages(user))
+		// Allow deletion of old files
+		// Allow signing out
+		// Allow deleting account
+		c.JSON(http.StatusOK, user)
 	}
 }

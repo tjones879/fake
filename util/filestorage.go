@@ -5,36 +5,19 @@ import (
 	"compress/gzip"
 	"fmt"
 	"github.com/cespare/xxhash"
+	"github.com/satori/go.uuid"
+	"github.com/tjones879/fake/structs"
 	"io"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"strings"
-	"time"
 )
 
 var rootDir = "/home/jones/fake"
 
-// FileStorage TODO
-type FileStorage struct {
-	Hash      uint64    `bson:"hash"`
-	Directory string    `bson:"dir"`
-	Name      string    `bson:"name"`
-	Contents  string    `bson:"-"`
-	Date      time.Time `bson:"timestamp"`
-}
-
 func getFileHash(contents string) (hash uint64) {
 	hash = xxhash.Sum64String(contents)
-	return
-}
-
-// CreateStorage TODO
-func CreateStorage(hash uint64, uri, contents string) (file FileStorage) {
-	file.Hash = hash
-	file.Directory = getPathByHash(hash)
-	file.Name = getFileNameByURL(uri)
-	file.Contents = contents
 	return
 }
 
@@ -117,14 +100,19 @@ func decompressFile(buf io.Reader) string {
 	return string(contents)
 }
 
-func (f FileStorage) fileExists() bool {
-	_, err := os.Stat(f.Directory + "/" + f.Name)
-	return !os.IsNotExist(err)
+// CreateStorage TODO
+func CreateStorage(hash uint64, uri, contents string) (file structs.FileStorage) {
+	file.Hash = hash
+	file.Directory = getPathByHash(hash)
+	file.Name = getFileNameByURL(uri)
+	file.Contents = contents
+	file.UID = uuid.NewV4().String()
+	return
 }
 
 // SaveFile TODO
-func (f *FileStorage) SaveFile() {
-	if !f.fileExists() {
+func SaveFile(f *structs.FileStorage) {
+	if !f.FileExists() {
 		os.MkdirAll(f.Directory, 0777)
 		fd, err := os.OpenFile(f.Directory+"/"+f.Name, os.O_CREATE|os.O_WRONLY, 0666)
 		if err != nil {
@@ -140,14 +128,13 @@ func (f *FileStorage) SaveFile() {
 /*
 LoadFile will load and decompress a file by name and hash
 */
-func (f *FileStorage) LoadFile() {
-	if f.fileExists() {
+func LoadFile(f *structs.FileStorage) {
+	if f.FileExists() {
 		fd, err := os.OpenFile(f.Directory+"/"+f.Name, os.O_RDONLY, 0666)
 		if err != nil {
 			fmt.Println("LoadFile:", err)
 		}
 		f.Contents = decompressFile(fd)
 		fd.Close()
-		fmt.Println(f.Contents)
 	}
 }

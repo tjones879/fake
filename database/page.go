@@ -4,19 +4,18 @@ import (
 	"fmt"
 	"github.com/satori/go.uuid"
 	"github.com/tjones879/fake/structs"
-	"github.com/tjones879/fake/util"
 	"gopkg.in/mgo.v2/bson"
 )
 
 var pages = "pages"
 
 /*SavePage saves a page that has not been seen yet in mongo.*/
-func SavePage(url string, file util.FileStorage) (page structs.SavedPage, err error) {
+func SavePage(url string, file structs.FileStorage) (page structs.SavedPage, err error) {
 	page = structs.SavedPage{
 		ID:       uuid.NewV4().String(),
 		Location: url,
-		Versions: []util.FileStorage{
-			file,
+		Versions: []string{
+			file.UID,
 		},
 	}
 	err = usingCollection(pages).Insert(page)
