@@ -129,3 +129,12 @@ func SearchAnnotate(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, response)
 }
+
+// PageURI returns the correct page URI given an id.
+func PageURI(c *gin.Context) {
+	fileID := c.Query("id")
+	page := db.GetSavedPageByFile(fileID)
+	c.JSON(http.StatusOK, struct {
+		URL string `json:"url"`
+	}{page.Location})
+}

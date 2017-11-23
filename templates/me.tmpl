@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://assets.annotateit.org/annotator/v1.1.0/annotator-full.min.js"></script>
+
+    <title>Annotate</title>
+
+	<link rel="stylesheet" href="/css/skeleton.css">
+	<link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.1.0/annotator.min.css">
+    <link rel="stylesheet" href="/css/splash.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row account-header">
+			<div class="twelve columns">Twelve</div>
+		</div>
+		<div class="row">
+			<div class="twelve columns">
+				<div class="row actions">
+					<div class="three columns">&#8203;</div>
+					<div class="six columns">
+						SIX COLUMNS OF BUTTONS	
+					</div>
+					<div class="three columns">&#8203;</div>
+				</div>
+				{{range .files}}
+					<div class="row">
+						<div class="ten columns">
+							<input type="checkbox"/>
+							<a href="/saved?id={{.ID}}">{{.Name}}</a>
+						</div>
+						<div class="two columns">
+							<i class="material-icons">delete</i>
+						</div>
+					</div>
+				{{end}}
+				<div class="row actions">
+					<div class="three columns">&#8203;</div>
+					<div class="six columns">
+						SIX COLUMNS OF BUTTONS	
+					</div>
+					<div class="three columns">&#8203;</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+</script>
+</html>

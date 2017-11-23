@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	_ "fmt"
+	"fmt"
 	"github.com/cespare/xxhash"
 	"github.com/gin-gonic/gin"
 	"github.com/microcosm-cc/bluemonday"
 	db "github.com/tjones879/fake/database"
+	"github.com/tjones879/fake/structs"
 	"github.com/tjones879/fake/util"
 	"html/template"
 	"io/ioutil"
@@ -66,7 +67,10 @@ func PageHandler(c *gin.Context) {
 		db.SavePage(page, file)
 		db.SaveFile(file)
 		if uid := getUserID(c); uid != "" {
-			db.AddFileToUser(uid, file)
+			db.AddFileToUser(uid, structs.FileReference{
+				ID:   file.UID,
+				Name: file.Name,
+			})
 		}
 	} else {
 		sp := db.GetSavedPage(page)
@@ -76,6 +80,19 @@ func PageHandler(c *gin.Context) {
 		scraped = file.Contents
 	}
 	contents := template.HTML(scraped)
+
+	c.HTML(200, "article.tmpl", gin.H{
+		"contents": contents,
+	})
+}
+
+// SavedHandler TODO
+func SavedHandler(c *gin.Context) {
+	page := c.DefaultQuery("id", "123456789")
+	fmt.Println("SavedHandler", page)
+	f, _ := db.GetFileByID(page)
+	util.LoadFile(&f)
+	contents := template.HTML(f.Contents)
 
 	c.HTML(200, "article.tmpl", gin.H{
 		"contents": contents,

@@ -27,6 +27,7 @@ func main() {
 	router.GET("/auth", handlers.AuthHandler)
 	router.GET("/page", handlers.PageHandler)
 	router.GET("/me", handlers.AccountHandler)
+	router.GET("/saved", handlers.SavedHandler)
 
 	storage := router.Group("/store")
 	storage.GET("/", handlers.RootAnnotate)

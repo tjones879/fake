@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -102,7 +103,7 @@ func decompressFile(buf io.Reader) string {
 
 // CreateStorage TODO
 func CreateStorage(hash uint64, uri, contents string) (file structs.FileStorage) {
-	file.Hash = hash
+	file.Hash = strconv.FormatUint(hash, 10)
 	file.Directory = getPathByHash(hash)
 	file.Name = getFileNameByURL(uri)
 	file.Contents = contents
