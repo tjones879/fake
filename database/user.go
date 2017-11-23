@@ -48,7 +48,8 @@ func GetUserByID(id string) (user structs.User, err error) {
 
 // GetUserPages TODO
 func GetUserPages(u structs.User) (files []structs.FileStorage) {
-	for _, p := range u.FileIDs {
+	for _, fr := range u.Files {
+		p := fr.ID
 		f, err := GetFileByID(p)
 		fmt.Println("fileID", p)
 		if err != nil {
@@ -62,10 +63,10 @@ func GetUserPages(u structs.User) (files []structs.FileStorage) {
 }
 
 // AddFileToUser TODO
-func AddFileToUser(uid string, f structs.FileStorage) error {
+func AddFileToUser(user string, fr structs.FileReference) error {
 	// pages
-	match := bson.M{"id": uid}
+	match := bson.M{"id": user}
 	// TODO find a better way to select `files` field from doc
-	change := bson.M{"$push": bson.M{"files": f.UID}}
+	change := bson.M{"$push": bson.M{"files": fr}}
 	return usingCollection("users").Update(match, change)
 }
