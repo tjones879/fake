@@ -8,7 +8,7 @@ import (
 // FileStorage TODO
 type FileStorage struct {
 	UID       string    `bson:"id"`
-	Hash      uint64    `bson:"hash"`
+	Hash      string    `bson:"hash"`
 	Directory string    `bson:"dir"`
 	Name      string    `bson:"name"`
 	Contents  string    `bson:"-"`
