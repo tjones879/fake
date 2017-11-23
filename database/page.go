@@ -31,6 +31,15 @@ func GetSavedPage(url string) (page structs.SavedPage) {
 	return page
 }
 
+// GetSavedPageByFile TODO
+func GetSavedPageByFile(fileID string) (page structs.SavedPage) {
+	err := usingCollection(pages).Find(bson.M{"versions": bson.M{"$elemMatch": bson.M{"$eq": fileID}}}).One(&page)
+	if err != nil {
+		fmt.Println("GetSavedPageByFile:", err)
+	}
+	return
+}
+
 /*UpdateSavedPage TODO */
 func UpdateSavedPage(page structs.SavedPage) error {
 	err := usingCollection(pages).Update(bson.M{"id": page.ID}, page)
