@@ -29,13 +29,14 @@
 					<div class="three columns">&#8203;</div>
 				</div>
 				{{range .files}}
-					<div class="row">
+					<div class="row file">
 						<div class="ten columns">
-							<input type="checkbox"/>
-							<a href="/saved?id={{.ID}}">{{.Name}}</a>
+							<input type="checkbox" file="{{.ID}}"/>
+							<a href="/saved?id={{.ID}}" class="file-name">{{.Name}}</a>
+							<a href="#" class="edit" file="{{.ID}}"><i class="material-icons">mode_edit</i></a>
 						</div>
 						<div class="two columns">
-							<i class="material-icons">delete</i>
+							<a href="#" class="delete" file="{{.ID}}"><i class="material-icons">delete</i></a>
 						</div>
 					</div>
 				{{end}}
@@ -51,5 +52,44 @@
 	</div>
 </body>
 <script type="text/javascript">
+$("a.delete").click(
+	function(event) {
+		event.preventDefault();
+		var fid = $(this).attr("file");
+		console.log(fid);
+
+		$.ajax("/me/delete?file=" + fid, {
+			type: "DELETE",
+			success: function(data) {
+				$("div.file").has("a[file='" + fid + "'").remove();
+			},
+			error: function() {
+				console.log("failure");
+			}
+		});
+	}
+);
+$("a.edit").click(
+	function(event) {
+		event.preventDefault();
+		var fid = $(this).attr("file");
+		var fileLink = $(this).siblings(".file-name")[0];
+		if (fileLink) {
+			$(fileLink).replaceWith('<input name="test" type="text" class="edit-name" value="' + $(fileLink).text() + '">');
+		} else {
+			var fileEdit = $(this).siblings(".edit-name")[0];
+			$.ajax("/me/rename?file=" + fid + "&name=" + $(fileEdit).val(), {
+				type: "PUT",
+				success: function(data) {
+					console.log(data);
+				},
+				error: function() {
+					console.log("failure");
+				}
+			});
+			$(fileEdit).replaceWith('<a href="/saved?id=' + fid + '" class="file-name">' + $(fileEdit).val() + '</a>');
+		}
+	}
+);
 </script>
 </html>

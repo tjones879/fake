@@ -74,3 +74,7 @@ span.annotator-hl {
 	background-color: #93a87b;
 	opacity: .8;
 }
+
+div.file i{
+	vertical-align: middle;
+}

@@ -29,7 +29,10 @@ func AccountHandler(c *gin.Context) {
 		}
 	} else {
 		// Get all pages annotated by the user
-		user, _ := db.GetUserByID(id.(string))
+		user, err := db.GetUserByID(id.(string))
+		if err != nil {
+			fmt.Println("AccountHandler", err)
+		}
 		fmt.Println("Files", user.Files)
 		files = user.Files
 		// Allow deletion of old files
@@ -39,4 +42,37 @@ func AccountHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "me.tmpl", gin.H{
 		"files": files,
 	})
+}
+
+// DeleteFileHandler handles /me/delete?file=
+func DeleteFileHandler(c *gin.Context) {
+	session := sessions.Default(c)
+	id := session.Get("user-id").(string)
+
+	fileID := c.Query("file")
+	err := db.RemoveUserFile(id, fileID)
+	if err != nil {
+		fmt.Println("DeleteFileHandler", err)
+	}
+	c.JSON(http.StatusOK, struct {
+		id string
+	}{fileID})
+}
+
+// EditFileNameHandler TODO
+func EditFileNameHandler(c *gin.Context) {
+	session := sessions.Default(c)
+	id := session.Get("user-id").(string)
+
+	fileID := c.Query("file")
+	newName := c.Query("name")
+	fmt.Println("EditFileNameHandler", fileID, newName)
+	err := db.UpdateUserFileName(id, fileID, newName)
+	if err != nil {
+		fmt.Println("EditFileNameHandler", err)
+	}
+	c.JSON(http.StatusOK, struct {
+		id   string
+		name string
+	}{fileID, newName})
 }

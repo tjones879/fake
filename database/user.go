@@ -70,3 +70,29 @@ func AddFileToUser(user string, fr structs.FileReference) error {
 	change := bson.M{"$push": bson.M{"files": fr}}
 	return usingCollection("users").Update(match, change)
 }
+
+// RemoveUserFile TODO
+func RemoveUserFile(uid string, file string) error {
+	user := bson.M{"id": uid}
+	change := bson.M{"$pull": bson.M{"files": bson.M{"id": file}}}
+	return usingCollection("users").Update(user, change)
+}
+
+// UpdateUserFileName(id, fileID, newName)
+func UpdateUserFileName(uid, fileID, newName string) error {
+	//err := usingCollection(pages).Find(bson.M{"versions": bson.M{"$elemMatch": bson.M{"$eq": fileID}}}).One(&page)
+	user := bson.M{
+		"id": uid,
+		"files": bson.M{
+			"$elemMatch": bson.M{
+				"id": fileID,
+			},
+		},
+	}
+	change := bson.M{
+		"$set": bson.M{
+			"files.$.name": newName,
+		},
+	}
+	return usingCollection("users").Update(user, change)
+}

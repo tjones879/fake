@@ -26,8 +26,11 @@ func main() {
 	router.GET("/login", handlers.LoginHandler)
 	router.GET("/auth", handlers.AuthHandler)
 	router.GET("/page", handlers.PageHandler)
-	router.GET("/me", handlers.AccountHandler)
 	router.GET("/saved", handlers.SavedHandler)
+
+	router.GET("/me", handlers.AccountHandler)
+	router.DELETE("/me/delete", handlers.DeleteFileHandler)
+	router.PUT("/me/rename", handlers.EditFileNameHandler)
 
 	storage := router.Group("/store")
 	storage.GET("/", handlers.RootAnnotate)
