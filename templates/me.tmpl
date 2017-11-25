@@ -17,10 +17,13 @@
 <body>
 	<div class="container">
 		<div class="row account-header">
-			<div class="twelve columns">Twelve</div>
+			<div class="twelve columns">
+				<a class="button button-primary" href="/logout">Logout</a>
+			</div>
 		</div>
 		<div class="row">
-			<div class="twelve columns">
+			<div class="twelve columns file-list">
+				<!--
 				<div class="row actions">
 					<div class="three columns">&#8203;</div>
 					<div class="six columns">
@@ -28,10 +31,15 @@
 					</div>
 					<div class="three columns">&#8203;</div>
 				</div>
+				-->
+				<div class="row">
+					<div class="six columns">File Name | Edit Name</div>
+					<div class="six columns" style="text-align: right;">Delete File</div>
+				</div>
 				{{range .files}}
 					<div class="row file">
 						<div class="ten columns">
-							<input type="checkbox" file="{{.ID}}"/>
+							<!--<input type="checkbox" file="{{.ID}}"/>-->
 							<a href="/saved?id={{.ID}}" class="file-name">{{.Name}}</a>
 							<a href="#" class="edit" file="{{.ID}}"><i class="material-icons">mode_edit</i></a>
 						</div>
@@ -40,6 +48,7 @@
 						</div>
 					</div>
 				{{end}}
+				<!--
 				<div class="row actions">
 					<div class="three columns">&#8203;</div>
 					<div class="six columns">
@@ -47,6 +56,7 @@
 					</div>
 					<div class="three columns">&#8203;</div>
 				</div>
+				-->
 			</div>
 		</div>
 	</div>

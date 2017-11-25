@@ -53,7 +53,9 @@ a {
 
 div.article-body {
 	margin: 50px 10px 10px 10px;
-	padding: 50px 10px 10px 10px;
+	padding: 0px 20px 10px 20px;
+	border-radius: 2px;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 div.article-body p{
@@ -77,4 +79,18 @@ span.annotator-hl {
 
 div.file i{
 	vertical-align: middle;
+}
+
+.file-list {
+	padding: 15px 10px 10px 15px;
+	border-radius: 2px;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+div.row.file {
+	margin: 5px 0px 5px 0px;
+}
+
+div.row.file >.two {
+	text-align: right;
 }
