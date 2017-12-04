@@ -27,6 +27,7 @@ func main() {
 	router.GET("/auth", handlers.AuthHandler)
 	router.GET("/page", handlers.PageHandler)
 	router.GET("/saved", handlers.SavedHandler)
+	router.GET("/logout", handlers.LogoutHandler)
 
 	router.GET("/me", handlers.AccountHandler)
 	router.DELETE("/me/delete", handlers.DeleteFileHandler)
