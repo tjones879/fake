@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+    app:
+        image: golang:latest
+        volumes:
+            - .:/go/src/fake
+        working_dir: /go/src/fake
+        ports:
+            - "8080:8080"
+        links:
+            - mongo
+        command: ./init.sh
+    mongo:
+        image: mongo:latest
